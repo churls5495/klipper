@@ -39,6 +39,15 @@ the following strings: "adjust", "fine".
 - `current_screw`: The index for the current screw being adjusted.
 - `accepted_screws`: The number of accepted screws.
 
+## belay
+
+The following information is available in
+[belay some_name](Config_Reference.md#belay) objects:
+- `printer["belay <config_name>"].last_state`: Returns True if the belay's
+  sensor is in a triggered state (indicating its slider is compressed).
+- `printer["belay <config_name>"].enabled`: Returns True if the belay is
+  currently enabled.
+
 ## configfile
 
 The following information is available in the `configfile` object
@@ -67,6 +76,16 @@ The following information is available in the `display_status` object
 - `progress`: The progress value of the last `M73` G-Code command (or
   `virtual_sdcard.progress` if no recent `M73` received).
 - `message`: The message contained in the last `M117` G-Code command.
+
+## dockable_probe
+
+The following information is available in the
+[dockable_probe](Config_Reference.md#dockable_probe):
+- `last_status`: The UNKNOWN/ATTACHED/DOCKED status of the probbe as
+  reported during the last QUERY_DOCKABLE_PROBE command. Note, if
+  this is used in a macro, due to the order of template expansion,
+  the QUERY_DOCKABLE_PROBE command must be run prior to the macro
+  containing this reference.
 
 ## endstop_phase
 
@@ -163,10 +182,20 @@ objects:
 
 The following information is available in the
 [firmware_retraction](Config_Reference.md#firmware_retraction) object:
-- `retract_length`, `retract_speed`, `unretract_extra_length`,
-  `unretract_speed`: The current settings for the firmware_retraction
-  module. These settings may differ from the config file if a
-  `SET_RETRACTION` command alters them.
+- `retract_length`: Current setting for length of filament retract moves.
+- `retract_speed`: Current setting for speed of filament retract moves.
+- `unretract_extra_length`: Current setting for additional length of filament
+  unretract moves (positive values will result in filament extrusion, while
+  negative values up to 1 mm (2.41 mm3 for 1.75 mm filament) will result in
+  lagging extrusion of filament).
+- `unretract_speed`: Current setting for speed of unretract moves of filament.
+- `unretract_length`: Unretract move length (sum of retract and extra unretract
+   length).
+- `z_hop_height`: Current setting for the height of nozzle lifting move (Z-Hop).
+- Above settings for the firmware_retraction module may differ from the
+  config file if a `SET_RETRACTION` command altered them. Additional information
+  available is as follows.
+- `retract_state`: Returns 'True' if filament is retracted.
 
 ## gcode
 
@@ -535,6 +564,14 @@ on a cartesian, hybrid_corexy or hybrid_corexz robot
   "INACTIVE" and "PRIMARY".
 - `carriage_1`: The mode of the carriage 1. Possible values are:
   "INACTIVE", "PRIMARY", "COPY", and "MIRROR".
+
+## trad_rack
+
+The following informatin is available in the
+[trad_rack](Config_Reference.md#trad_rack) object:
+- `curr_lane`: The lane the selector is currently positioned at.
+- `active_lane`: The lane currently loaded in the toolhead.
+- `selector_homed`: Whether or not the selector axis is homed.
 
 ## virtual_sdcard
 

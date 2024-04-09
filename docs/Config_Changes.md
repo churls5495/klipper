@@ -24,6 +24,12 @@ extruder `shared_heater` config option has been removed (deprecated on
 20220210). The bed_mesh `relative_reference_index` option has been
 removed (deprecated on 20230619).
 
+20240128: `printer.kinematics` now accepts `limited_cartesian` and
+`limited_cartesian` and `limited_corexy` that enables `max_{x,y}_accel` and
+`max_{x,y}_velocity` (only for `limited_cartesian`). In the future, this
+functionality may be moved into the original kinematics module (as optional
+settings).
+
 20240123: The output_pin SET_PIN CYCLE_TIME parameter has been
 removed. Use the new
 [pwm_cycle_time](Config_Reference.md#pwm_cycle_time) module if it is
@@ -61,6 +67,19 @@ for more details).
 20230810: The flash-sdcard.sh script now supports both variants of the
 Bigtreetech SKR-3, STM32H743 and STM32H723. For this, the original tag
 of btt-skr-3 now has changed to be either btt-skr-3-h743 or btt-skr-3-h723.
+
+20230801: The setting `fan.off_bellow` has been changed to `fan.min_power`.
+However, this change will not affect users who do not utilize this setting.
+With this update, a PWM scaling has been introduced between `min_power` and
+`max_power`. Fans that require a higher `min_power` will now have access to
+their full "safe" power curve. By properly setting `min_power`, any fan
+(such as CPAP) should engage even at `M106 S1`. It's recommended to review
+your slicer/macros to adjust your fan speeds. Your previously designated 20%
+fan speed may no longer represent your lowest fan setting but will now
+correspond to an actual 20% fan speed.
+If you had previously set `max_power` to anything below 1.0 (default),
+it is advisable to recalibrate `min_power` and `kick_start_time` again, with
+the settings `min_power: 0` and `max_power: 1`.
 
 20230729: The exported status for `dual_carriage` is changed. Instead of
 exporting `mode` and `active_carriage`, the individual modes for each
